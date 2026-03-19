@@ -70,3 +70,10 @@ Create a maximum of 6 slides to defend your architecture:
     2. Show your Speedup and Memory Profiling graphs.
     3. Real-World Proof: Take the coordinates of your highest DFSI scoring vessel, plug them into Maps, and include a screenshot. Explain the geographical context (e.g., "This ship went dark exactly on the border of the Russian EEZ").
     4. Code Defense One student from each group will be randomly selected to explain specific lines of the parallel code during the presentation.
+
+
+mprof run --include-children python ais_pipeline.py aisdk-2026-01-24.csv aisdk-2026-01-25.csv 100000
+mprof plot --output profile_pipeline.png
+
+python ais_anomalies.py --shards-dir work_mmsi_parts
+
