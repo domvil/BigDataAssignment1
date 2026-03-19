@@ -72,6 +72,9 @@ Create a maximum of 6 slides to defend your architecture:
     4. Code Defense One student from each group will be randomly selected to explain specific lines of the parallel code during the presentation.
 
 
+
+RUN INSTRUCTIONS:
+
 mprof run --include-children python ais_pipeline.py aisdk-2026-01-24.csv aisdk-2026-01-25.csv 100000
 mprof plot --output profile_pipeline.png
 
