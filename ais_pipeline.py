@@ -12,9 +12,9 @@ from typing import Optional
 from config import (
     COL_MMSI, COL_TIMESTAMP, COL_LAT, COL_LON, COL_SOG,
     COL_DRAUGHT, COL_SHIP_TYPE, COL_NAME, COL_DEST,
-    INVALID_MMSI_EXACT, MMSI_MIN, MMSI_MAX,
     NUM_SHARDS, CHUNK_SIZES, NUM_WORKERS, WORK_DIR,
 )
+from helper import mmsi_valid, coord_valid
 
 logging.basicConfig(
     level=logging.INFO,
@@ -22,22 +22,6 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
 )
 log = logging.getLogger(__name__)
-
-
-# ----------------------------------------------
-# Validation
-# ----------------------------------------------
-
-def mmsi_valid(m: int) -> bool:
-    if m in INVALID_MMSI_EXACT:
-        return False
-    return MMSI_MIN <= m <= MMSI_MAX
-
-
-def coord_valid(lat: float, lon: float) -> bool:
-    if lat == 0.0 and lon == 0.0:
-        return False
-    return -90.0 <= lat <= 90.0 and -180.0 <= lon <= 180.0
 
 
 def parse_ts(s: str) -> Optional[int]:

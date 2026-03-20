@@ -1,5 +1,20 @@
 import math
 
+from config import INVALID_MMSI_EXACT, MMSI_MIN, MMSI_MAX
+
+
+def mmsi_valid(m: int) -> bool:
+    if m in INVALID_MMSI_EXACT:
+        return False
+    return MMSI_MIN <= m <= MMSI_MAX
+
+
+def coord_valid(lat: float, lon: float) -> bool:
+    if lat == 0.0 and lon == 0.0:
+        return False
+    return -90.0 <= lat <= 90.0 and -180.0 <= lon <= 180.0
+
+
 try:
     from global_land_mask import globe as _globe
     HAS_LAND_MASK = True
