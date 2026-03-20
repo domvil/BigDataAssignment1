@@ -9,30 +9,12 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from typing import Optional
 
-# ----------------------------------------------
-# Configuration
-# ----------------------------------------------
-
-COL_MMSI      = "MMSI"
-COL_TIMESTAMP = "# Timestamp"
-COL_LAT       = "Latitude"
-COL_LON       = "Longitude"
-COL_SOG       = "SOG"
-COL_DRAUGHT   = "Draught"
-COL_SHIP_TYPE = "Ship type"
-COL_NAME      = "Name"
-COL_DEST      = "Destination"
-
-INVALID_MMSI_EXACT: set[int] = {
-    0, 111111111, 123456789, 222222222, 999999999,
-}
-MMSI_MIN    = 200_000_000
-MMSI_MAX    = 999_999_999
-
-NUM_SHARDS  = 32
-CHUNK_SIZES = [10_000, 50_000, 100_000]
-NUM_WORKERS = min(12, os.cpu_count() or 1)
-WORK_DIR    = "work_mmsi_parts"
+from config import (
+    COL_MMSI, COL_TIMESTAMP, COL_LAT, COL_LON, COL_SOG,
+    COL_DRAUGHT, COL_SHIP_TYPE, COL_NAME, COL_DEST,
+    INVALID_MMSI_EXACT, MMSI_MIN, MMSI_MAX,
+    NUM_SHARDS, CHUNK_SIZES, NUM_WORKERS, WORK_DIR,
+)
 
 logging.basicConfig(
     level=logging.INFO,

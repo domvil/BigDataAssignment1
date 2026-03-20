@@ -30,18 +30,13 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-RESULTS_DIR  = "results"
-NUM_WORKERS  = min(12, os.cpu_count() or 1)
-
-# Anomaly thresholds
-GAP_HOURS          = 4.0          # Anomaly A: min gap duration hours
-MOVING_SPEED_MIN   = 0.1          # knots - below this = truly anchored
-LOITER_SPEED_MAX   = 1.0          # Anomaly B: SOG threshold knots
-LOITER_HOURS_MIN   = 2.0          # Anomaly B: min duration hours
-LOITER_DIST_M      = 500.0        # Anomaly B: max separation metres
-DRAFT_CHANGE_PCT   = 0.05         # Anomaly C: 5% draught change
-DRAFT_BLACKOUT_HRS = 2.0          # Anomaly C: min blackout hours
-CLONE_SPEED_KN     = 60.0         # Anomaly D: impossible speed knots
+from config import (
+    RESULTS_DIR, NUM_WORKERS,
+    GAP_HOURS, MOVING_SPEED_MIN,
+    LOITER_SPEED_MAX, LOITER_HOURS_MIN, LOITER_DIST_M,
+    DRAFT_CHANGE_PCT, DRAFT_BLACKOUT_HRS,
+    CLONE_SPEED_KN,
+)
 
 
 # ----------------------------------------------
