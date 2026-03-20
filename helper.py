@@ -1,4 +1,5 @@
 import math
+import importlib
 
 from config import INVALID_MMSI_EXACT, MMSI_MIN, MMSI_MAX
 
@@ -12,7 +13,11 @@ def mmsi_valid(m: int) -> bool:
 def coord_valid(lat: float, lon: float) -> bool:
     if lat == 0.0 and lon == 0.0:
         return False
-    return -90.0 <= lat <= 90.0 and -180.0 <= lon <= 180.0
+    if not (-90.0 <= lat <= 90.0 and -180.0 <= lon <= 180.0):
+        return False
+    if is_on_land(lat, lon):
+        return False
+    return True
 
 
 try:

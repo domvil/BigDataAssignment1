@@ -43,7 +43,7 @@ from config import (
 # Geometry helpers
 # ----------------------------------------------
 
-from helper import haversine_nm, haversine_m, implied_speed_kn, is_on_land as _is_on_land
+from helper import haversine_nm, haversine_m, implied_speed_kn
 
 
 # ----------------------------------------------
@@ -216,8 +216,6 @@ def detect_D(mmsi: str, pings: list[dict]) -> list[dict]:
                                p1["lat"], p1["lon"], p1["ts"])
         if spd >= CLONE_SPEED_KN:
             dist_nm = haversine_nm(p0["lat"], p0["lon"], p1["lat"], p1["lon"])
-            on_land = _is_on_land(p0["lat"], p0["lon"]) or \
-                      _is_on_land(p1["lat"], p1["lon"])
             avg_sog = (p0["sog"] + p1["sog"]) / 2.0
  
             candidate = {
@@ -229,7 +227,7 @@ def detect_D(mmsi: str, pings: list[dict]) -> list[dict]:
                 "reported_sog": round(avg_sog, 2),
                 "lat1": p0["lat"], "lon1": p0["lon"], "ts1": p0["ts"],
                 "lat2": p1["lat"], "lon2": p1["lon"], "ts2": p1["ts"],
-                "gps_error":    on_land,
+                "gps_error":    False,
                 "cluster_dist_nm": None,
             }
             # Keep the jump with the largest dist_nm — this drives DFSI scoring
