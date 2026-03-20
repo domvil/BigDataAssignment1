@@ -48,45 +48,7 @@ CLONE_SPEED_KN     = 60.0         # Anomaly D: impossible speed knots
 # Geometry helpers
 # ----------------------------------------------
 
-try:
-    from global_land_mask import globe as _globe
-    HAS_LAND_MASK = True
-except ImportError:
-    HAS_LAND_MASK = False
-
-
-def _is_on_land(lat: float, lon: float) -> bool:
-    """Return True if coordinate is on land."""
-    if not HAS_LAND_MASK:
-        return False
-    try:
-        return bool(_globe.is_land(lat, lon))
-    except Exception:
-        return False
-
-
-def haversine_nm(lat1, lon1, lat2, lon2) -> float:
-    """Great-circle distance in nautical miles."""
-    R = 3440.065  # Earth radius in nm
-    phi1, phi2 = math.radians(lat1), math.radians(lat2)
-    dphi  = math.radians(lat2 - lat1)
-    dlam  = math.radians(lon2 - lon1)
-    a = math.sin(dphi/2)**2 + math.cos(phi1)*math.cos(phi2)*math.sin(dlam/2)**2
-    return 2 * R * math.asin(math.sqrt(a))
-
-
-def haversine_m(lat1, lon1, lat2, lon2) -> float:
-    """Great-circle distance in metres."""
-    return haversine_nm(lat1, lon1, lat2, lon2) * 1852.0
-
-
-def implied_speed_kn(lat1, lon1, ts1, lat2, lon2, ts2) -> float:
-    """Speed in knots implied by two positions and their timestamps."""
-    dt_hours = (ts2 - ts1) / 3600.0
-    if dt_hours <= 0:
-        return float("inf")
-    dist_nm = haversine_nm(lat1, lon1, lat2, lon2)
-    return dist_nm / dt_hours
+from helper import haversine_nm, haversine_m, implied_speed_kn, is_on_land as _is_on_land
 
 
 # ----------------------------------------------
