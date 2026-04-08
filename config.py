@@ -13,6 +13,9 @@ COL_DRAUGHT   = "Draught"
 COL_SHIP_TYPE = "Ship type"
 COL_NAME      = "Name"
 COL_DEST      = "Destination"
+COL_MOBILE_TYPE = "Type of mobile"
+
+ALLOWED_MOBILE_TYPES: frozenset[str] = frozenset({"Class A"})
 
 INVALID_MMSI_EXACT: set[int] = {
     0, 111111111, 123456789, 222222222, 999999999,
@@ -20,7 +23,7 @@ INVALID_MMSI_EXACT: set[int] = {
 MMSI_MIN    = 200_000_000
 MMSI_MAX    = 999_999_999
 
-NUM_SHARDS  = 32
+NUM_SHARDS  = 64
 CHUNK_SIZES = [10_000, 50_000, 100_000]
 WORK_DIR    = "work_mmsi_parts"
 
