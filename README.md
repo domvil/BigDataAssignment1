@@ -30,6 +30,7 @@ python ais_pipeline.py <csv1> [csv2 ...] [chunk_size] [--shards-dir=DIR]
 |---|---|---|
 | `chunk_size` | `100000` | Rows read per worker per iteration |
 | `--shards-dir` | `work_mmsi_parts` | Output directory for shard files |
+| `--workers` | `NUM_WORKERS` (auto) | Number of parallel worker processes |
  
 Example call:
 ```bash
@@ -59,7 +60,7 @@ Results are written to `results/`:
 python ais_benchmark.py aisdk-2026-01-24.csv aisdk-2026-01-25.csv
 ```
 
-Produces `benchmark_results.png`, `benchmark_chunk_sizes.csv`, and `benchmark_worker_counts.csv`.
+Produces four separate chart files: `benchmark_time_vs_chunk.png`, `benchmark_ram_vs_chunk.png`, `benchmark_time_vs_workers.png`, `benchmark_speedup.png`, plus `benchmark_chunk_sizes.csv` and `benchmark_worker_counts.csv`.
 
 ### Memory profiling
  
@@ -89,6 +90,7 @@ The core challenge is parallelising a 2 GB CSV file without loading it into memo
 - Coordinates at null island (0.0, 0.0) or outside valid lat/lon range
 - Rows with unparseable timestamps
 - Duplicate pings identified by matching `(mmsi, ts, lat, lon)`
+- Rows where `Type of mobile` is not `Class A` - filters out Class B vessels, Base Stations, SAR Aircraft, and other non-commercial transponder types
  
 Duplicates arise because multiple AIS base stations receive the same vessel broadcast simultaneously. A hash set finds duplicates for each workers own segment. Then, during merging, the data is sorted so rows from different segments end up next to each other.
  
