@@ -13,30 +13,27 @@ def mmsi_valid(m: int) -> bool:
 def coord_valid(lat: float, lon: float) -> bool:
     if lat == 0.0 and lon == 0.0:
         return False
-    if not (-90.0 <= lat <= 90.0 and -180.0 <= lon <= 180.0):
-        return False
-    if is_on_land(lat, lon):
-        return False
-    return True
+    return -90.0 <= lat <= 90.0 and -180.0 <= lon <= 180.0
 
 
-try:
-    from global_land_mask import globe as _globe
-    HAS_LAND_MASK = True
-except ImportError:
-    HAS_LAND_MASK = False
-
+_globe = None
+HAS_LAND_MASK = False
 
 def is_on_land(lat: float, lon: float) -> bool:
-    """Return True if coordinate is on land."""
+    global _globe, HAS_LAND_MASK
+    if _globe is None:
+        try:
+            from global_land_mask import globe as _globe
+            HAS_LAND_MASK = True
+        except ImportError:
+            HAS_LAND_MASK = False
+            return False
     if not HAS_LAND_MASK:
         return False
     try:
         return bool(_globe.is_land(lat, lon))
     except Exception:
         return False
-
-
 
 def haversine_nm(lat1, lon1, lat2, lon2) -> float:
     """Great-circle distance in nautical miles."""
