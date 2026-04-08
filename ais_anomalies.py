@@ -6,6 +6,7 @@ B  Loitering        Two vessels < 500 m apart, SOG < 1 kn, for > 2 h
 C  Draft Change     Draught changes > 5 % during AIS blackout > 2 h
 D  Identity Cloning Same MMSI pings from locations requiring speed > 60 kn
 
+DFSI formula (from assignment image)
 --------------------------------------
 DFSI = (max_gap_hours / 2) + (total_impossible_distance_nm / 10) + (C x 15)
 """
@@ -42,7 +43,7 @@ from config import (
 # Geometry helpers
 # ----------------------------------------------
 
-from helper import haversine_nm, haversine_m, implied_speed_kn
+from helper import haversine_nm, haversine_m, implied_speed_kn, is_on_land
 
 
 # ----------------------------------------------
@@ -207,7 +208,6 @@ def detect_D(mmsi: str, pings: list[dict]) -> list[dict]:
                         "lat1": p0["lat"], "lon1": p0["lon"], "ts1": p0["ts"],
                         "lat2": p1["lat"], "lon2": p1["lon"], "ts2": p1["ts"],
                         "gps_error":       False,
-                        "cluster_dist_nm": None,
                     })
             continue
  
@@ -216,7 +216,8 @@ def detect_D(mmsi: str, pings: list[dict]) -> list[dict]:
         if spd >= CLONE_SPEED_KN:
             dist_nm = haversine_nm(p0["lat"], p0["lon"], p1["lat"], p1["lon"])
             avg_sog = (p0["sog"] + p1["sog"]) / 2.0
- 
+
+            on_land = is_on_land(p0["lat"], p0["lon"]) or is_on_land(p1["lat"], p1["lon"])
             candidate = {
                 "mmsi":         mmsi,
                 "event_type":   "speed_violation",
@@ -226,8 +227,7 @@ def detect_D(mmsi: str, pings: list[dict]) -> list[dict]:
                 "reported_sog": round(avg_sog, 2),
                 "lat1": p0["lat"], "lon1": p0["lon"], "ts1": p0["ts"],
                 "lat2": p1["lat"], "lon2": p1["lon"], "ts2": p1["ts"],
-                "gps_error":    False,
-                "cluster_dist_nm": None,
+                "gps_error": on_land
             }
             # Keep the jump with the largest dist_nm — this drives DFSI scoring
             if not in_run or dist_nm > best["dist_nm"]:
