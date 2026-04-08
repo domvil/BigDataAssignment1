@@ -6,9 +6,8 @@ B  Loitering        Two vessels < 500 m apart, SOG < 1 kn, for > 2 h
 C  Draft Change     Draught changes > 5 % during AIS blackout > 2 h
 D  Identity Cloning Same MMSI pings from locations requiring speed > 60 kn
 
-DFSI formula (from assignment image)
 --------------------------------------
-DFSI = (max_gap_hours / 2) + (total_impossible_distance_nm / 10) + (C x 1.5)
+DFSI = (max_gap_hours / 2) + (total_impossible_distance_nm / 10) + (C x 15)
 """
 
 import os
@@ -512,12 +511,12 @@ def detect_B_from_candidates(candidates: list[dict]) -> list[dict]:
 
 def compute_dfsi(stats: dict) -> float:
     """
-    DFSI = (max_gap_hours / 2) + (total_impossible_distance_nm / 10) + (C x 1.5)
+    DFSI = (max_gap_hours / 2) + (total_impossible_distance_nm / 10) + (C x 15)
     """
     return (
         stats["max_gap_hours"]       / 2.0
         + stats["total_impossible_nm"] / 10.0
-        + stats["count_C"]             * 1.5
+        + stats["count_C"]             * 15
     )
 
 
