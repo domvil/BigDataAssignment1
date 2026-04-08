@@ -2,7 +2,7 @@
  
 Baltic Sea AIS data processing and anomaly detection using parallel computing.
  
-**Dataset:** Danish Maritime Authority AIS Data - January 24–25, 2026  
+**Dataset:** Danish Maritime Authority AIS Data - January 24-25, 2026  
 **Source:** http://web.ais.dk/aisdata/
  
 ---
