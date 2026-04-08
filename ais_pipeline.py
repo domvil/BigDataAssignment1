@@ -12,6 +12,7 @@ from typing import Optional
 from config import (
     COL_MMSI, COL_TIMESTAMP, COL_LAT, COL_LON, COL_SOG,
     COL_DRAUGHT, COL_SHIP_TYPE, COL_NAME, COL_DEST,
+    COL_MOBILE_TYPE, ALLOWED_MOBILE_TYPES,
     NUM_SHARDS, CHUNK_SIZES, NUM_WORKERS, WORK_DIR,
 )
 from helper import mmsi_valid, coord_valid
@@ -38,6 +39,11 @@ def parse_row_to_tsv(row: dict) -> Optional[tuple[int, str]]:
     Validate a raw CSV row and return (mmsi_int, tsv_line) or None.
     TSV format: mmsi\tts_epoch\tlat\tlon\tsog\tdraught\tship_type\tname\tdest
     """
+    
+    mobile_type = row.get(COL_MOBILE_TYPE, "").strip()
+    if mobile_type not in ALLOWED_MOBILE_TYPES:
+        return None
+    
     try:
         m = int(row.get(COL_MMSI, "").strip())
     except (ValueError, AttributeError):
@@ -460,13 +466,18 @@ if __name__ == "__main__":
         sys.exit(1)
 
     shards_dir = WORK_DIR
+    
+    num_workers = NUM_WORKERS
     for f in flags:
         if f.startswith("--shards-dir="):
             shards_dir = f.split("=", 1)[1]
+        elif f.startswith("--workers="):
+            num_workers = int(f.split("=", 1)[1])
 
     elapsed, shard_paths = run_pipeline_multi(
         csv_files,
         chunk_size=chunk_size,
+        num_workers=num_workers,
         shards_out_dir=shards_dir,
     )
 
